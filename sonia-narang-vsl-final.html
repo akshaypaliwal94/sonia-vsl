@@ -2696,8 +2696,183 @@ document.querySelectorAll('.faq-item').forEach(item=>{
       return;
     }
     
-    showStep(8);
+    // Submit form data to webhook
+    submitFormData();
   });
+
+  // Function to submit all form data to GoHighLevel webhook
+  async function submitFormData() {
+    const name = document.getElementById('qpopName').value.trim();
+    const email = document.getElementById('qpopEmail').value.trim();
+    const phone = document.getElementById('qpopPhone').value.trim();
+    const countryCode = document.getElementById('qpopCountryCode').value;
+    const city = document.getElementById('qpopCity').value.trim();
+    
+    // Prepare comprehensive form data
+    const formData = {
+      // Contact Information
+      name: name,
+      email: email,
+      phone: countryCode + ' ' + phone,
+      city: city,
+      country_code: countryCode,
+      phone_number: phone,
+      
+      // Quiz Answers
+      health_concern: answers[0] || '',
+      previous_experience: answers[1] || '',
+      desired_outcome: answers[2] || '',
+      budget_range: answers[3] || '',
+      occupation: answers[4] || '',
+      urgency: answers[5] || '',
+      commitment: answers[6] || '',
+      
+      // Additional Metadata
+      source: 'Sonia Narang VSL',
+      form_completed_at: new Date().toISOString(),
+      user_agent: navigator.userAgent,
+      url: window.location.href,
+      
+      // Quiz Labels for Better CRM Understanding
+      quiz_answers: {
+        step1_health_concern: getAnswerLabel(0, answers[0]),
+        step2_previous_experience: getAnswerLabel(1, answers[1]),
+        step3_desired_outcome: getAnswerLabel(2, answers[2]),
+        step4_budget_range: getAnswerLabel(3, answers[3]),
+        step5_occupation: getAnswerLabel(4, answers[4]),
+        step6_urgency: getAnswerLabel(5, answers[5]),
+        step7_commitment: getAnswerLabel(6, answers[6])
+      },
+      
+      // Lead Scoring (for GHL automation)
+      lead_score: calculateLeadScore(),
+      lead_temperature: getLeadTemperature()
+    };
+
+    try {
+      // GoHighLevel webhook URL
+      const webhookURL = 'https://services.leadconnectorhq.com/hooks/WvoNJ7nlGsuzfIGgF4Ts/webhook-trigger/9e3bd1b5-294d-4b88-b8a7-3c1dcc22c925';
+      
+      const response = await fetch(webhookURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        console.log('Form data successfully sent to GoHighLevel');
+        showStep(8); // Show confirmation step
+      } else {
+        console.error('Webhook submission failed:', response.status);
+        // Still show confirmation step to avoid user confusion
+        showStep(8);
+      }
+    } catch (error) {
+      console.error('Error submitting form data:', error);
+      // Still show confirmation step to avoid user confusion
+      showStep(8);
+    }
+  }
+
+  // Function to get human-readable answer labels
+  function getAnswerLabel(step, value) {
+    const answerMap = {
+      0: { // Health concern
+        'pcos': 'PCOS or hormonal imbalance',
+        'thyroid': 'Thyroid (hypo, hyper, or Hashimoto\'s)',
+        'gut': 'Gut health / digestion / IBS',
+        'other': 'Weight, hair, skin, sleep, or other'
+      },
+      1: { // Previous experience
+        'first': 'No — this would be my first time',
+        'didnt-work': 'Yes — but it didn\'t work or I gave up',
+        'worked-then-regressed': 'Yes — worked short-term but symptoms returned'
+      },
+      2: { // Desired outcome
+        'regulate': 'Regulate my hormones and fix my root cause',
+        'energy': 'Get my energy and clarity back',
+        'weight': 'Lose weight without destroying my metabolism',
+        'relationship': 'Heal my relationship with food'
+      },
+      3: { // Budget
+        'budget-basic': '₹10,000 - ₹25,000',
+        'budget-standard': '₹25,000 - ₹50,000',
+        'budget-premium': '₹50,000 - ₹1,00,000',
+        'budget-luxury': '₹1,00,000+'
+      },
+      4: { // Occupation
+        'business-owner': 'Business Owner / Entrepreneur',
+        'corporate': 'Corporate Executive / Professional',
+        'celebrity': 'Celebrity / Public Figure',
+        'homemaker': 'Homemaker',
+        'student': 'Student',
+        'other': 'Other'
+      },
+      5: { // Urgency
+        'urgent': 'Very urgent - I need help right away',
+        'soon': 'Soon - within the next few months',
+        'eventually': 'Eventually - when the right opportunity comes'
+      },
+      6: { // Commitment
+        'fully-committed': 'Yes, I\'m fully committed to changing my health',
+        'mostly-ready': 'Mostly ready - I need some guidance',
+        'exploring': 'Just exploring my options right now'
+      }
+    };
+    
+    return answerMap[step]?.[value] || value;
+  }
+
+  // Function to calculate lead score based on answers
+  function calculateLeadScore() {
+    let score = 0;
+    
+    // Health concern scoring
+    if (answers[0] === 'pcos' || answers[0] === 'thyroid') score += 20;
+    else if (answers[0] === 'gut') score += 15;
+    else score += 10;
+    
+    // Previous experience scoring
+    if (answers[1] === 'worked-then-regressed') score += 25;
+    else if (answers[1] === 'didnt-work') score += 20;
+    else score += 15;
+    
+    // Budget scoring
+    if (answers[3] === 'budget-luxury') score += 30;
+    else if (answers[3] === 'budget-premium') score += 25;
+    else if (answers[3] === 'budget-standard') score += 15;
+    else score += 5;
+    
+    // Occupation scoring
+    if (answers[4] === 'business-owner' || answers[4] === 'celebrity') score += 20;
+    else if (answers[4] === 'corporate') score += 15;
+    else score += 10;
+    
+    // Urgency scoring
+    if (answers[5] === 'urgent') score += 25;
+    else if (answers[5] === 'soon') score += 15;
+    else score += 5;
+    
+    // Commitment scoring
+    if (answers[6] === 'fully-committed') score += 25;
+    else if (answers[6] === 'mostly-ready') score += 15;
+    else score += 5;
+    
+    return Math.min(score, 100); // Cap at 100
+  }
+
+  // Function to determine lead temperature
+  function getLeadTemperature() {
+    const score = calculateLeadScore();
+    
+    if (score >= 80) return 'HOT';
+    else if (score >= 60) return 'WARM';
+    else if (score >= 40) return 'LUKEWARM';
+    else return 'COLD';
+  }
+
   // Real-time validation for phone number
   document.getElementById('qpopPhone').addEventListener('input', function(e) {
     this.style.borderColor = '';
