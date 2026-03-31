@@ -3099,6 +3099,9 @@ document.querySelectorAll('.faq-item').forEach(item=>{
   overlay.addEventListener('click',e=>{if(e.target===overlay)closePopup();});
   closeBtn.addEventListener('click',closePopup);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup();});
+
+  // Expose openPopup to global scope for mobile sticky CTA
+  window.openPopup = openPopup;
 })();
 
 </script>
