@@ -846,6 +846,32 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
   font-family:'Raleway',sans-serif;font-size:16px;color:var(--ink);
   transition:border-color 0.2s;outline:none;
 }
+
+/* Country code dropdown specific styling */
+select.qpop-input {
+  padding-right: 14px; /* Adjust for dropdown arrow */
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 14px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Phone number container styling */
+.qpop-phone-container {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+/* Ensure both inputs have same height */
+.qpop-phone-container .qpop-input {
+  display: flex;
+  align-items: center;
+}
 .qpop-input::placeholder{color:var(--muted-l);}
 .qpop-input:focus{border-color:rgba(36,61,46,0.4);}
 .qpop-privacy{font-size:11px;color:var(--muted);text-align:center;}
@@ -2274,14 +2300,43 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
         <div>
           <div class="qpop-field-label">Full Name <span class="qpop-field-req">*</span></div>
           <input class="qpop-input" id="qpopName" type="text" autocomplete="name" placeholder="Your full name" required>
+          <div id="nameValidationMessage" style="font-size: 12px; color: rgba(220,53,69,0.8); margin-top: 4px; display: none;"></div>
         </div>
         <div>
           <div class="qpop-field-label">Email <span class="qpop-field-req">*</span></div>
           <input class="qpop-input" id="qpopEmail" type="email" inputmode="email" autocomplete="email" placeholder="Your email address" required>
+          <div id="emailValidationMessage" style="font-size: 12px; color: rgba(220,53,69,0.8); margin-top: 4px; display: none;"></div>
         </div>
         <div>
           <div class="qpop-field-label">WhatsApp Number <span class="qpop-field-req">*</span></div>
-          <input class="qpop-input" id="qpopPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Your WhatsApp number" required>
+          <div class="qpop-phone-container">
+            <select class="qpop-input" id="qpopCountryCode" style="width: 120px; flex-shrink: 0;" required>
+              <option value="+91" data-min="10" data-max="10">🇮🇳 +91</option>
+              <option value="+1" data-min="10" data-max="10">🇺🇸 +1</option>
+              <option value="+44" data-min="10" data-max="11">🇬🇧 +44</option>
+              <option value="+61" data-min="9" data-max="9">🇦🇺 +61</option>
+              <option value="+971" data-min="9" data-max="9">🇦🇪 +971</option>
+              <option value="+65" data-min="8" data-max="8">🇸🇬 +65</option>
+              <option value="+60" data-min="9" data-max="10">🇲🇾 +60</option>
+              <option value="+852" data-min="8" data-max="8">🇭🇰 +852</option>
+              <option value="+49" data-min="10" data-max="12">🇩🇪 +49</option>
+              <option value="+33" data-min="9" data-max="9">🇫🇷 +33</option>
+              <option value="+39" data-min="9" data-max="10">🇮🇹 +39</option>
+              <option value="+34" data-min="9" data-max="9">🇪🇸 +34</option>
+              <option value="+31" data-min="9" data-max="9">🇳🇱 +31</option>
+              <option value="+41" data-min="9" data-max="9">🇨🇭 +41</option>
+              <option value="+46" data-min="9" data-max="9">🇸🇪 +46</option>
+              <option value="+47" data-min="8" data-max="8">🇳🇴 +47</option>
+              <option value="+45" data-min="8" data-max="8">🇩🇰 +45</option>
+              <option value="+358" data-min="9" data-max="10">🇫🇮 +358</option>
+              <option value="+81" data-min="10" data-max="11">🇯🇵 +81</option>
+              <option value="+82" data-min="9" data-max="10">🇰🇷 +82</option>
+              <option value="+86" data-min="11" data-max="11">🇨🇳 +86</option>
+              <option value="+85" data-min="8" data-max="8">🇭🇰 +85</option>
+            </select>
+            <input class="qpop-input" id="qpopPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Your WhatsApp number" style="flex: 1;" required>
+          </div>
+          <div id="phoneValidationMessage" style="font-size: 12px; color: rgba(220,53,69,0.8); margin-top: 4px; display: none;"></div>
         </div>
         <div>
           <div class="qpop-field-label">City <span class="qpop-field-req">*</span></div>
@@ -2471,31 +2526,266 @@ document.querySelectorAll('.faq-item').forEach(item=>{
   bindNext('next5',5,()=>{if(!answers[5]){flash(5);return false;}return true;});
   bindNext('next6',6,()=>{if(!answers[6]){flash(6);return false;}return true;});
 
+  // Enhanced phone validation function
+  function validatePhoneNumber(phone, countryCode) {
+    // Remove all non-digit characters
+    const cleanPhone = phone.replace(/\D/g, '');
+    
+    // Get selected country option
+    const countryOption = document.querySelector(`#qpopCountryCode option[value="${countryCode}"]`);
+    const minLength = parseInt(countryOption.dataset.min);
+    const maxLength = parseInt(countryOption.dataset.max);
+    
+    // Check length
+    if (cleanPhone.length < minLength || cleanPhone.length > maxLength) {
+      return {
+        valid: false,
+        message: `Phone number should be ${minLength}${minLength !== maxLength ? `-${maxLength}` : ''} digits for ${countryCode}`
+      };
+    }
+    
+    // Country-specific validation rules
+    switch (countryCode) {
+      case '+91': // India
+        if (!cleanPhone.match(/^[6789]\d{9}$/)) {
+          return {
+            valid: false,
+            message: 'Indian mobile numbers should start with 6, 7, 8, or 9'
+          };
+        }
+        break;
+      case '+1': // US/Canada
+        if (!cleanPhone.match(/^[2-9]\d{2}[2-9]\d{2}\d{4}$/)) {
+          return {
+            valid: false,
+            message: 'Invalid US/Canada phone number format'
+          };
+        }
+        break;
+      case '+44': // UK
+        if (!cleanPhone.match(/^[1-9]\d{8,10}$/)) {
+          return {
+            valid: false,
+            message: 'Invalid UK phone number format'
+          };
+        }
+        break;
+      // Add more country-specific validations as needed
+      default:
+        // Basic validation for other countries - just check if it's all digits
+        if (!cleanPhone.match(/^\d+$/)) {
+          return {
+            valid: false,
+            message: 'Phone number should contain only digits'
+          };
+        }
+    }
+    
+    return { valid: true, message: '' };
+  }
+
+  // Enhanced email validation function
+  function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    
+    if (!emailRegex.test(email)) {
+      return {
+        valid: false,
+        message: 'Please enter a valid email address'
+      };
+    }
+    
+    // Check for common typos
+    const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+    const domain = email.split('@')[1]?.toLowerCase();
+    
+    if (domain && domain.includes('.co') && !domain.includes('.com')) {
+      return {
+        valid: false,
+        message: 'Did you mean .com instead of .co?'
+      };
+    }
+    
+    return { valid: true, message: '' };
+  }
+
+  // Show validation message helper
+  function showValidationMessage(elementId, message, isError = true) {
+    const messageElement = document.getElementById(elementId + 'ValidationMessage');
+    if (messageElement) {
+      messageElement.textContent = message;
+      messageElement.style.display = message ? 'block' : 'none';
+      messageElement.style.color = isError ? 'rgba(220,53,69,0.8)' : 'rgba(74,122,90,0.8)';
+    }
+  }
+
   document.getElementById('next7').addEventListener('click',function(){
     const name=document.getElementById('qpopName').value.trim();
     const email=document.getElementById('qpopEmail').value.trim();
     const phone=document.getElementById('qpopPhone').value.trim();
+    const countryCode=document.getElementById('qpopCountryCode').value;
     const city=document.getElementById('qpopCity').value.trim();
     
-    if(!name||!email||!phone||!city){
-      if(!name)document.getElementById('qpopName').style.borderColor='rgba(220,53,69,0.8)';
-      if(!email)document.getElementById('qpopEmail').style.borderColor='rgba(220,53,69,0.8)';
-      if(!phone)document.getElementById('qpopPhone').style.borderColor='rgba(220,53,69,0.8)';
-      if(!city)document.getElementById('qpopCity').style.borderColor='rgba(220,53,69,0.8)';
-      return;
+    // Reset all border colors and messages
+    ['qpopName','qpopEmail','qpopPhone','qpopCountryCode','qpopCity'].forEach(id=>{
+      document.getElementById(id).style.borderColor='';
+    });
+    ['name', 'email', 'phone'].forEach(field => showValidationMessage(field, ''));
+    
+    let hasErrors = false;
+    
+    // Validate name
+    if(!name){
+      document.getElementById('qpopName').style.borderColor='rgba(220,53,69,0.8)';
+      showValidationMessage('name', 'Full name is required');
+      hasErrors = true;
+    } else if (name.length < 2) {
+      document.getElementById('qpopName').style.borderColor='rgba(220,53,69,0.8)';
+      showValidationMessage('name', 'Name must be at least 2 characters');
+      hasErrors = true;
+    } else if (!/^[a-zA-Z\s'.-]+$/.test(name)) {
+      document.getElementById('qpopName').style.borderColor='rgba(220,53,69,0.8)';
+      showValidationMessage('name', 'Name should only contain letters, spaces, and basic punctuation');
+      hasErrors = true;
+    } else if (name.split(' ').length < 2) {
+      document.getElementById('qpopName').style.borderColor='rgba(220,53,69,0.8)';
+      showValidationMessage('name', 'Please enter your full name (first and last name)');
+      hasErrors = true;
     }
     
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(email)){
+    // Validate email
+    if(!email){
       document.getElementById('qpopEmail').style.borderColor='rgba(220,53,69,0.8)';
+      showValidationMessage('email', 'Email address is required');
+      hasErrors = true;
+    } else {
+      const emailValidation = validateEmail(email);
+      if(!emailValidation.valid){
+        document.getElementById('qpopEmail').style.borderColor='rgba(220,53,69,0.8)';
+        showValidationMessage('email', emailValidation.message);
+        hasErrors = true;
+      }
+    }
+    
+    // Validate phone number
+    if(!phone){
+      document.getElementById('qpopPhone').style.borderColor='rgba(220,53,69,0.8)';
+      showValidationMessage('phone', 'WhatsApp number is required');
+      hasErrors = true;
+    } else {
+      const phoneValidation = validatePhoneNumber(phone, countryCode);
+      if(!phoneValidation.valid){
+        document.getElementById('qpopPhone').style.borderColor='rgba(220,53,69,0.8)';
+        document.getElementById('qpopCountryCode').style.borderColor='rgba(220,53,69,0.8)';
+        showValidationMessage('phone', phoneValidation.message);
+        hasErrors = true;
+      }
+    }
+    
+    // Validate city
+    if(!city){
+      document.getElementById('qpopCity').style.borderColor='rgba(220,53,69,0.8)';
+      hasErrors = true;
+    } else if (city.length < 2) {
+      document.getElementById('qpopCity').style.borderColor='rgba(220,53,69,0.8)';
+      hasErrors = true;
+    }
+    
+    // If any validation failed, don't proceed
+    if (hasErrors) {
       return;
     }
     
     showStep(8);
   });
-  ['qpopName','qpopEmail','qpopPhone','qpopCity'].forEach(id=>{
-    document.getElementById(id).addEventListener('input',function(){this.style.borderColor='';});
+  // Real-time validation for phone number
+  document.getElementById('qpopPhone').addEventListener('input', function(e) {
+    this.style.borderColor = '';
+    showValidationMessage('phone', '');
+    
+    // Allow only digits, spaces, hyphens, and parentheses
+    let value = this.value.replace(/[^\d\s\-\(\)]/g, '');
+    this.value = value;
+    
+    const phone = value.trim();
+    const countryCode = document.getElementById('qpopCountryCode').value;
+    
+    if (phone.length > 0) {
+      const phoneValidation = validatePhoneNumber(phone, countryCode);
+      if (!phoneValidation.valid) {
+        showValidationMessage('phone', phoneValidation.message);
+      } else {
+        showValidationMessage('phone', '✓ Valid number', false);
+      }
+    }
+  });
+
+  // Prevent non-numeric characters on keypress (except formatting characters)
+  document.getElementById('qpopPhone').addEventListener('keypress', function(e) {
+    const allowedKeys = ['0','1','2','3','4','5','6','7','8','9',' ','-','(',')','Backspace','Delete','ArrowLeft','ArrowRight','Tab'];
+    if (!allowedKeys.includes(e.key) && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+    }
+  });
+
+  // Update validation when country code changes
+  document.getElementById('qpopCountryCode').addEventListener('change', function() {
+    this.style.borderColor = '';
+    const phone = document.getElementById('qpopPhone').value.trim();
+    
+    if (phone.length > 0) {
+      const phoneValidation = validatePhoneNumber(phone, this.value);
+      if (!phoneValidation.valid) {
+        showValidationMessage('phone', phoneValidation.message);
+      } else {
+        showValidationMessage('phone', '✓ Valid number', false);
+      }
+    }
+  });
+
+  // Name validation
+  document.getElementById('qpopName').addEventListener('input', function() {
+    this.style.borderColor = '';
+    showValidationMessage('name', '');
+    
+    const name = this.value.trim();
+    if (name.length > 0) {
+      if (name.length < 2) {
+        showValidationMessage('name', 'Name must be at least 2 characters');
+      } else if (!/^[a-zA-Z\s'.-]+$/.test(name)) {
+        showValidationMessage('name', 'Name should only contain letters, spaces, and basic punctuation');
+      } else if (name.split(' ').length < 2) {
+        showValidationMessage('name', 'Please enter your full name (first and last name)');
+      } else {
+        showValidationMessage('name', '✓ Valid name', false);
+      }
+    }
+  });
+
+  // Email validation with real-time feedback
+  document.getElementById('qpopEmail').addEventListener('input', function() {
+    this.style.borderColor = '';
+    showValidationMessage('email', '');
+    
+    const email = this.value.trim();
+    if (email.length > 0) {
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.valid) {
+        showValidationMessage('email', emailValidation.message);
+      } else {
+        showValidationMessage('email', '✓ Valid email', false);
+      }
+    }
+  });
+
+  // City validation
+  document.getElementById('qpopCity').addEventListener('input', function() {
+    this.style.borderColor = '';
+    
+    const city = this.value.trim();
+    if (city.length > 0 && city.length < 2) {
+      this.style.borderColor = 'rgba(220,53,69,0.8)';
+    }
   });
   document.querySelectorAll('.qpop-back').forEach(btn=>{
     btn.addEventListener('click',function(){showStep(parseInt(this.dataset.target));});
