@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "sonia-narang-vsl-final.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/sonia-narang-vsl-final.html"
+    }
+  ]
+}
