@@ -798,8 +798,8 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
 
 .qpop-step{display:none;padding:20px 24px 24px;}
 .qpop-step.active{display:block;}
-#step5{padding-bottom:32px;}
-#step6{padding-bottom:32px;}
+#step7{padding-bottom:32px;}
+#step8{padding-bottom:32px;}
 
 .qpop-step-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--forest-l);margin-bottom:8px;}
 .qpop-q{font-family:'Lora',serif;font-size:1.2rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:18px;}
@@ -1006,8 +1006,8 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
   .final-card{padding:40px 24px;}
   .qpop-modal{max-height:98vh;margin:10px;max-width:calc(100vw - 20px);}
   .qpop-step{padding:16px 20px 20px;}
-  #step5{padding-bottom:24px;}
-  #step6{padding-bottom:24px;}
+  #step7{padding-bottom:24px;}
+  #step8{padding-bottom:24px;}
 }
 
 /* ── INTER-SECTION CTA ── */
@@ -2100,11 +2100,14 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
       <div class="qpop-seg" id="seg2"></div>
       <div class="qpop-seg" id="seg3"></div>
       <div class="qpop-seg" id="seg4"></div>
+      <div class="qpop-seg" id="seg5"></div>
+      <div class="qpop-seg" id="seg6"></div>
+      <div class="qpop-seg" id="seg7"></div>
     </div>
 
     <!-- STEP 0 -->
     <div class="qpop-step active" id="step0">
-      <div class="qpop-step-label">Step 1 of 4</div>
+      <div class="qpop-step-label">Step 1 of 8</div>
       <div class="qpop-q">What is your primary health concern?</div>
       <div class="qpop-options">
         <div class="qpop-option" data-step="0" data-val="pcos">
@@ -2128,7 +2131,7 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
 
     <!-- STEP 1 -->
     <div class="qpop-step" id="step1">
-      <div class="qpop-step-label">Step 2 of 4</div>
+      <div class="qpop-step-label">Step 2 of 8</div>
       <div class="qpop-q">Have you worked with a nutritionist or tried a diet program before?</div>
       <div class="qpop-options">
         <div class="qpop-option" data-step="1" data-val="first">
@@ -2149,7 +2152,7 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
 
     <!-- STEP 2 -->
     <div class="qpop-step" id="step2">
-      <div class="qpop-step-label">Step 3 of 6</div>
+      <div class="qpop-step-label">Step 3 of 8</div>
       <div class="qpop-q">What outcome matters most to you in the next 3 months?</div>
       <div class="qpop-options">
         <div class="qpop-option" data-step="2" data-val="regulate">
@@ -2173,7 +2176,7 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
 
     <!-- STEP 3 - BUDGET -->
     <div class="qpop-step" id="step3">
-      <div class="qpop-step-label">Step 4 of 6</div>
+      <div class="qpop-step-label">Step 4 of 8</div>
       <div class="qpop-q">What's your investment range for improving your health?</div>
       <div class="qpop-options">
         <div class="qpop-option" data-step="3" data-val="budget-basic">
@@ -2197,7 +2200,7 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
 
     <!-- STEP 4 - OCCUPATION -->
     <div class="qpop-step" id="step4">
-      <div class="qpop-step-label">Step 5 of 6</div>
+      <div class="qpop-step-label">Step 5 of 8</div>
       <div class="qpop-q">What best describes your profession?</div>
       <div class="qpop-options">
         <div class="qpop-option" data-step="4" data-val="business-owner">
@@ -2225,8 +2228,51 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
       </div>
     </div>
 
-    <!-- STEP 5 — DETAILS -->
+    <!-- STEP 5 - URGENCY -->
     <div class="qpop-step" id="step5">
+      <div class="qpop-step-label">Step 6 of 8</div>
+      <div class="qpop-q">How urgent is it for you to solve your health concerns?</div>
+      <div class="qpop-options">
+        <div class="qpop-option" data-step="5" data-val="urgent">
+          <div class="qpop-radio"></div><div class="qpop-option-text">Very urgent - I need help right away</div>
+        </div>
+        <div class="qpop-option" data-step="5" data-val="soon">
+          <div class="qpop-radio"></div><div class="qpop-option-text">Soon - within the next few months</div>
+        </div>
+        <div class="qpop-option" data-step="5" data-val="eventually">
+          <div class="qpop-radio"></div><div class="qpop-option-text">Eventually - when the right opportunity comes</div>
+        </div>
+      </div>
+      <div class="qpop-footer">
+        <button class="qpop-back" data-target="4">← BACK</button>
+        <button class="qpop-next" id="next5">NEXT →</button>
+      </div>
+    </div>
+
+    <!-- STEP 6 - COMMITMENT -->
+    <div class="qpop-step" id="step6">
+      <div class="qpop-step-label">Step 7 of 8</div>
+      <div class="qpop-q">Are you ready to commit to making lifestyle changes?</div>
+      <div class="qpop-options">
+        <div class="qpop-option" data-step="6" data-val="fully-committed">
+          <div class="qpop-radio"></div><div class="qpop-option-text">Yes, I'm fully committed to changing my health</div>
+        </div>
+        <div class="qpop-option" data-step="6" data-val="mostly-ready">
+          <div class="qpop-radio"></div><div class="qpop-option-text">Mostly ready - I need some guidance</div>
+        </div>
+        <div class="qpop-option" data-step="6" data-val="exploring">
+          <div class="qpop-radio"></div><div class="qpop-option-text">Just exploring my options right now</div>
+        </div>
+      </div>
+      <div class="qpop-footer">
+        <button class="qpop-back" data-target="5">← BACK</button>
+        <button class="qpop-next" id="next6">NEXT →</button>
+      </div>
+    </div>
+
+    <!-- STEP 7 — DETAILS -->
+    <div class="qpop-step" id="step7">
+      <div class="qpop-step-label">Step 8 of 8</div>
       <div class="qpop-form-header">
         <div class="qpop-form-title">Almost there — your details</div>
         <div class="qpop-form-sub">⏱ Sonia's team will reach out within 24 hours</div>
@@ -2267,13 +2313,13 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
         </div>
       </div>
       <div class="qpop-footer">
-        <button class="qpop-back" data-target="4">← BACK</button>
-        <button class="qpop-next" id="next5">SUBMIT →</button>
+        <button class="qpop-back" data-target="6">← BACK</button>
+        <button class="qpop-next" id="next7">SUBMIT →</button>
       </div>
     </div>
 
-    <!-- STEP 6 — CONFIRM -->
-    <div class="qpop-step" id="step6">
+    <!-- STEP 8 — CONFIRM -->
+    <div class="qpop-step" id="step8">
       <div class="qpop-confirm">
         <div class="qpop-confirm-icon">🌿</div>
         <div class="qpop-confirm-tag">Clarity Call with Sonia's Team</div>
@@ -2387,8 +2433,8 @@ document.querySelectorAll('.faq-item').forEach(item=>{
 (function(){
   const overlay=document.getElementById('quizPopup');
   const closeBtn=document.getElementById('qpopClose');
-  const segs=[0,1,2,3,4].map(i=>document.getElementById('seg'+i));
-  const steps=[0,1,2,3,4].map(i=>document.getElementById('step'+i));
+  const segs=[0,1,2,3,4,5,6,7].map(i=>document.getElementById('seg'+i));
+  const steps=[0,1,2,3,4,5,6,7,8].map(i=>document.getElementById('step'+i));
   const answers={};
   let current=0;
 
@@ -2424,8 +2470,10 @@ document.querySelectorAll('.faq-item').forEach(item=>{
   bindNext('next2',2,()=>{if(!answers[2]){flash(2);return false;}return true;});
   bindNext('next3',3,()=>{if(!answers[3]){flash(3);return false;}return true;});
   bindNext('next4',4,()=>{if(!answers[4]){flash(4);return false;}return true;});
+  bindNext('next5',5,()=>{if(!answers[5]){flash(5);return false;}return true;});
+  bindNext('next6',6,()=>{if(!answers[6]){flash(6);return false;}return true;});
 
-  document.getElementById('next5').addEventListener('click',function(){
+  document.getElementById('next7').addEventListener('click',function(){
     const name=document.getElementById('qpopName').value.trim();
     const email=document.getElementById('qpopEmail').value.trim();
     const phone=document.getElementById('qpopPhone').value.trim();
@@ -2446,7 +2494,7 @@ document.querySelectorAll('.faq-item').forEach(item=>{
       return;
     }
     
-    showStep(6);
+    showStep(8);
   });
   ['qpopName','qpopEmail','qpopPhone','qpopCity'].forEach(id=>{
     document.getElementById(id).addEventListener('input',function(){this.style.borderColor='';});
