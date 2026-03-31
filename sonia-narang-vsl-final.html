@@ -2681,8 +2681,22 @@ document.querySelectorAll('.faq-item').forEach(item=>{
   const answers={};
   let current=0;
 
-  function openPopup(){current=0;showStep(0);overlay.classList.add('active');document.body.style.overflow='hidden';}
-  function closePopup(){overlay.classList.remove('active');document.body.style.overflow='';}
+  function openPopup(){
+    current=0;
+    showStep(0);
+    overlay.classList.add('active');
+    document.body.style.overflow='hidden';
+    // Hide mobile sticky CTA when popup opens
+    const mobileCTA = document.getElementById('mobileStickyBar');
+    if(mobileCTA) mobileCTA.style.display = 'none';
+  }
+  function closePopup(){
+    overlay.classList.remove('active');
+    document.body.style.overflow='';
+    // Show mobile sticky CTA when popup closes
+    const mobileCTA = document.getElementById('mobileStickyBar');
+    if(mobileCTA && window.innerWidth <= 768) mobileCTA.style.display = 'block';
+  }
 
   function showStep(n){
     steps.forEach((s,i)=>s.classList.toggle('active',i===n));
