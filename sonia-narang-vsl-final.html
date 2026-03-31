@@ -2228,15 +2228,19 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
       <div class="qpop-fields">
         <div>
           <div class="qpop-field-label">Full Name <span class="qpop-field-req">*</span></div>
-          <input class="qpop-input" id="qpopName" type="text" autocomplete="name" placeholder="Your full name">
+          <input class="qpop-input" id="qpopName" type="text" autocomplete="name" placeholder="Your full name" required>
         </div>
         <div>
-          <div class="qpop-field-label">Email</div>
-          <input class="qpop-input" id="qpopEmail" type="email" inputmode="email" autocomplete="email" placeholder="Your email (optional)">
+          <div class="qpop-field-label">Email <span class="qpop-field-req">*</span></div>
+          <input class="qpop-input" id="qpopEmail" type="email" inputmode="email" autocomplete="email" placeholder="Your email address" required>
         </div>
         <div>
           <div class="qpop-field-label">WhatsApp Number <span class="qpop-field-req">*</span></div>
-          <input class="qpop-input" id="qpopPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Your WhatsApp number">
+          <input class="qpop-input" id="qpopPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Your WhatsApp number" required>
+        </div>
+        <div>
+          <div class="qpop-field-label">City <span class="qpop-field-req">*</span></div>
+          <input class="qpop-input" id="qpopCity" type="text" autocomplete="address-level2" placeholder="Your city" required>
         </div>
       </div>
       <div class="qpop-privacy">🔒 Your details are private. Used only to reach out about your call.</div>
@@ -2275,7 +2279,13 @@ button:focus,a:focus,input:focus,select:focus{outline:2px solid var(--accent);ou
             <li>Find out if Sonia's approach is the right fit for you</li>
             <li>Walk away with clarity — whether you join or not</li>
           </ul>
-          <div class="qpop-note">Sonia's team will WhatsApp you within 24 hours to confirm your slot</div>
+          <div class="qpop-confirm-message">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <div style="width: 20px; height: 20px; background: #4CAF50; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">✓</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--forest);">Confirmed!</div>
+            </div>
+            <div class="qpop-note">Our team will get in touch with you within 24 hours on the WhatsApp number you provided</div>
+          </div>
         </div>
       </div>
       <div class="qpop-footer-confirm">
@@ -2411,15 +2421,28 @@ document.querySelectorAll('.faq-item').forEach(item=>{
 
   document.getElementById('next5').addEventListener('click',function(){
     const name=document.getElementById('qpopName').value.trim();
+    const email=document.getElementById('qpopEmail').value.trim();
     const phone=document.getElementById('qpopPhone').value.trim();
-    if(!name||!phone){
-      if(!name)document.getElementById('qpopName').style.borderColor='rgba(36,61,46,0.6)';
-      if(!phone)document.getElementById('qpopPhone').style.borderColor='rgba(36,61,46,0.6)';
+    const city=document.getElementById('qpopCity').value.trim();
+    
+    if(!name||!email||!phone||!city){
+      if(!name)document.getElementById('qpopName').style.borderColor='rgba(220,53,69,0.8)';
+      if(!email)document.getElementById('qpopEmail').style.borderColor='rgba(220,53,69,0.8)';
+      if(!phone)document.getElementById('qpopPhone').style.borderColor='rgba(220,53,69,0.8)';
+      if(!city)document.getElementById('qpopCity').style.borderColor='rgba(220,53,69,0.8)';
       return;
     }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(email)){
+      document.getElementById('qpopEmail').style.borderColor='rgba(220,53,69,0.8)';
+      return;
+    }
+    
     showStep(6);
   });
-  ['qpopName','qpopPhone'].forEach(id=>{
+  ['qpopName','qpopEmail','qpopPhone','qpopCity'].forEach(id=>{
     document.getElementById(id).addEventListener('input',function(){this.style.borderColor='';});
   });
   document.querySelectorAll('.qpop-back').forEach(btn=>{
