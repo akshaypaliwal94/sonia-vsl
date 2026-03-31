@@ -1178,52 +1178,162 @@ select.qpop-input {
   color: var(--forest);
   font-style: normal;
 }
-/* ── MOBILE STICKY CTA BAR ── */
+/* ── PREMIUM MOBILE STICKY CTA BAR ── */
 .mobile-sticky-cta {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(135deg, var(--forest), var(--forest-m));
-  padding: 16px;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+  border-top: 1px solid rgba(184,145,74,0.3);
+  backdrop-filter: blur(20px);
+  padding: 20px 16px;
+  box-shadow: 
+    0 -8px 32px rgba(36,61,46,0.12),
+    0 -4px 16px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.8);
   display: none;
-  animation: slideUpMobile 0.3s ease-out;
+  animation: slideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-sticky-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,145,74,0.8), rgba(74,122,90,0.5), transparent);
+}
+
+.mobile-cta-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-cta-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--forest) 0%, var(--forest-m) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  box-shadow: 
+    0 4px 12px rgba(36,61,46,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+.mobile-cta-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-cta-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--forest-l);
+  margin-bottom: 2px;
+  line-height: 1;
+}
+
+.mobile-cta-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin: 0;
 }
 
 .mobile-cta-btn {
-  width: 100%;
-  min-height: 56px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-l) 100%);
+  border: 1px solid var(--gold);
   color: white;
   font-family: 'Raleway', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 20px;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 4px 16px rgba(184,145,74,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: ctaGlow 3s ease-in-out infinite;
 }
 
-.mobile-cta-btn:hover {
-  background: rgba(255,255,255,0.15);
-  transform: translateY(-1px);
+.mobile-cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.mobile-cta-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 
+    0 2px 8px rgba(184,145,74,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.mobile-cta-btn:hover::before {
+  left: 100%;
 }
 
 @keyframes slideUpMobile {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from { 
+    transform: translateY(100%); 
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1;
+  }
 }
+
+@keyframes ctaPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes ctaGlow {
+  0%, 100% { 
+    box-shadow: 
+      0 4px 16px rgba(184,145,74,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 4px 20px rgba(184,145,74,0.4),
+      0 0 30px rgba(184,145,74,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+}
+
 
 /* ── ENHANCED MOBILE BREAKPOINTS ── */
 @media (max-width: 768px) {
   /* Show mobile sticky CTA */
   .mobile-sticky-cta { display: block; }
   
-  /* Add bottom padding to prevent content overlap */
-  body { padding-bottom: 88px; }
+  /* Add bottom padding to prevent content overlap with premium sticky CTA */
+  body { padding-bottom: 100px; }
   
   /* Larger touch targets */
   .play-btn {
@@ -2104,11 +2214,20 @@ select.qpop-input {
 
 </div><!-- /outer-wrap -->
 
-<!-- Mobile Sticky CTA -->
+<!-- Premium Mobile Sticky CTA -->
 <div class="mobile-sticky-cta" id="mobileStickyBar">
-  <button class="mobile-cta-btn" onclick="openPopup();">
-    Book Your Clarity Call →
-  </button>
+  <div class="mobile-cta-content">
+    <div class="mobile-cta-icon">
+      <span style="animation: ctaPulse 2s ease-in-out infinite;">✨</span>
+    </div>
+    <div class="mobile-cta-text">
+      <div class="mobile-cta-label">Transform Your Health</div>
+      <div class="mobile-cta-title">Book Your Clarity Call</div>
+    </div>
+    <button class="mobile-cta-btn" onclick="openPopup();">
+      Start Now
+    </button>
+  </div>
 </div>
 
 
